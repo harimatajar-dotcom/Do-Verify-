@@ -40,7 +40,7 @@ class DarkTheme {
         ),
 
         // Card Theme
-        cardTheme: CardThemeData(
+        cardTheme: CardTheme(
           color: AppColors.darkCard,
           elevation: 0,
           shape: RoundedRectangleBorder(
