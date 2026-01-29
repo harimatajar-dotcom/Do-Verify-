@@ -60,4 +60,53 @@ class TemplateEntity {
 
   @override
   String toString() => 'TemplateEntity(id: $id, name: $name, category: ${category.name})';
+
+  /// Create from JSON
+  factory TemplateEntity.fromJson(Map<String, dynamic> json) {
+    // Parse category
+    Category category = Category.all;
+    final categoryStr = json['category']?.toString().toLowerCase() ?? '';
+    for (var c in Category.values) {
+      if (c.name.toLowerCase() == categoryStr) {
+        category = c;
+        break;
+      }
+    }
+
+    // Parse tasks
+    List<String> tasks = [];
+    if (json['tasks'] != null) {
+      tasks = (json['tasks'] as List<dynamic>).map<String>((t) {
+        if (t is String) return t;
+        return (t['text'] ?? t['title'] ?? '').toString();
+      }).toList();
+    }
+
+    return TemplateEntity(
+      id: json['_id'] ?? json['id'] ?? '',
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
+      category: category,
+      tasks: tasks,
+      isFeatured: json['isFeatured'] ?? json['featured'] ?? false,
+      createdAt: json['createdAt'] != null 
+          ? DateTime.parse(json['createdAt']) 
+          : null,
+      updatedAt: json['updatedAt'] != null 
+          ? DateTime.parse(json['updatedAt']) 
+          : null,
+    );
+  }
+
+  /// Convert to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'category': category.name,
+      'tasks': tasks,
+      'isFeatured': isFeatured,
+    };
+  }
 }
