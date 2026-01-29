@@ -6,7 +6,9 @@ import '../../domain/entities/checklist_entity.dart';
 import '../widgets/common/bottom_nav_bar.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final bool showBottomNav;
+  
+  const HomeScreen({super.key, this.showBottomNav = true});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -110,10 +112,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _currentNavIndex,
-        onTap: _onNavTap,
-      ),
+      bottomNavigationBar: widget.showBottomNav
+          ? BottomNavBar(
+              currentIndex: _currentNavIndex,
+              onTap: _onNavTap,
+            )
+          : null,
     );
   }
 

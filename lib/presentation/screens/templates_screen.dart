@@ -19,7 +19,9 @@ import '../widgets/templates/category_icon.dart';
 
 /// Main templates screen
 class TemplatesScreen extends StatefulWidget {
-  const TemplatesScreen({super.key});
+  final bool showBottomNav;
+  
+  const TemplatesScreen({super.key, this.showBottomNav = true});
 
   @override
   State<TemplatesScreen> createState() => _TemplatesScreenState();
@@ -144,10 +146,12 @@ class _TemplatesScreenState extends State<TemplatesScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _currentNavIndex,
-        onTap: _onNavTap,
-      ),
+      bottomNavigationBar: widget.showBottomNav
+          ? BottomNavBar(
+              currentIndex: _currentNavIndex,
+              onTap: _onNavTap,
+            )
+          : null,
     );
   }
 
