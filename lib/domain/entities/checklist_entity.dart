@@ -100,6 +100,47 @@ class ChecklistEntity {
     );
   }
 
+  /// Create from JSON (API response)
+  factory ChecklistEntity.fromJson(Map<String, dynamic> json) {
+    final tasksJson = json['tasks'] as List<dynamic>? ?? [];
+    final tasks = tasksJson.map((t) => TaskEntity.fromJson(t)).toList();
+    
+    ChecklistStatus status = ChecklistStatus.inProgress;
+    if (json['status'] == 'completed') {
+      status = ChecklistStatus.completed;
+    } else if (json['isShared'] == true || json['visibility'] == 'public') {
+      status = ChecklistStatus.shared;
+    }
+
+    return ChecklistEntity(
+      id: json['_id'] ?? json['id'] ?? '',
+      title: json['name'] ?? json['title'] ?? '',
+      description: json['description'],
+      tasks: tasks,
+      status: status,
+      createdAt: json['createdAt'] != null 
+          ? DateTime.parse(json['createdAt']) 
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null 
+          ? DateTime.parse(json['updatedAt']) 
+          : null,
+      ownerId: json['user']?['_id'] ?? json['user'],
+      ownerName: json['user']?['name'],
+      sharedWith: (json['sharedWith'] as List<dynamic>?)?.cast<String>(),
+      color: json['color'],
+    );
+  }
+
+  /// Convert to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': title,
+      'description': description,
+      'tasks': tasks.map((t) => t.toJson()).toList(),
+    };
+  }
+
   static List<ChecklistEntity> sampleData() {
     return [
       ChecklistEntity(
