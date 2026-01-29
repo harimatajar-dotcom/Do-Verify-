@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../../core/utils/responsive.dart';
 import '../../domain/entities/checklist_entity.dart';
 import '../widgets/common/bottom_nav_bar.dart';
+import '../providers/checklist_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool showBottomNav;
@@ -18,7 +20,15 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentNavIndex = 0;
   String _selectedFilter = 'all';
   final _searchController = TextEditingController();
-  final List<ChecklistEntity> _checklists = ChecklistEntity.sampleData();
+
+  @override
+  void initState() {
+    super.initState();
+    // Load checklists from API
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ChecklistProvider>().loadChecklists();
+    });
+  }
 
   @override
   void dispose() {
@@ -27,7 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   List<ChecklistEntity> get _filteredChecklists {
-    var filtered = _checklists;
+    final provider = context.watch<ChecklistProvider>();
+    var filtered = provider.checklists;
 
     // Apply search filter
     if (_searchController.text.isNotEmpty) {

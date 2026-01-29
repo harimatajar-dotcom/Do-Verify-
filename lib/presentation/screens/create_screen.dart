@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../widgets/common/bottom_nav_bar.dart';
+import '../providers/checklist_provider.dart';
 
 class CreateScreen extends StatefulWidget {
   final bool showBottomNav;
@@ -130,7 +132,7 @@ class _CreateScreenState extends State<CreateScreen> {
     });
   }
 
-  void _createChecklist() {
+  void _createChecklist() async {
     if (_nameController.text.trim().isEmpty) {
       _showToast('Please enter a checklist name');
       return;
@@ -142,13 +144,37 @@ class _CreateScreenState extends State<CreateScreen> {
       return;
     }
 
-    _showToast('Checklist created successfully!');
+    setState(() => _isLoading = true);
 
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/home');
-      }
-    });
+    // Get tasks
+    final tasks = _taskControllers
+        .where((c) => c.text.trim().isNotEmpty)
+        .map((c) => c.text.trim())
+        .toList();
+
+    // Create via API
+    final provider = context.read<ChecklistProvider>();
+    final success = await provider.createChecklist(
+      name: _nameController.text.trim(),
+      description: _descController.text.trim().isNotEmpty 
+          ? _descController.text.trim() 
+          : null,
+      tasks: tasks,
+    );
+
+    if (!mounted) return;
+    setState(() => _isLoading = false);
+
+    if (success) {
+      _showToast('Checklist created successfully!');
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) {
+          Navigator.of(context).pushReplacementNamed('/main');
+        }
+      });
+    } else {
+      _showToast(provider.error ?? 'Failed to create checklist');
+    }
   }
 
   void _showToast(String message) {
