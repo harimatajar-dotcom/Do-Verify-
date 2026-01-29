@@ -7,6 +7,7 @@ import 'presentation/screens/login_screen.dart';
 import 'presentation/screens/register_screen.dart';
 import 'presentation/screens/home_screen.dart';
 import 'presentation/screens/templates_screen.dart';
+import 'presentation/screens/main_shell.dart';
 import 'presentation/screens/checklist_detail_screen.dart';
 import 'presentation/screens/create_screen.dart';
 import 'presentation/screens/shared_screen.dart';
@@ -76,7 +77,7 @@ class CheckFlowApp extends StatelessWidget {
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: themeProvider.themeMode,
-            initialRoute: '/home',
+            initialRoute: '/main',
             onGenerateRoute: _generateRoute,
           );
         },
@@ -96,6 +97,12 @@ class CheckFlowApp extends StatelessWidget {
       case '/register':
         return MaterialPageRoute(
           builder: (_) => const RegisterScreen(),
+          settings: settings,
+        );
+
+      case '/main':
+        return MaterialPageRoute(
+          builder: (_) => const MainShell(),
           settings: settings,
         );
 

@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../widgets/common/bottom_nav_bar.dart';
-
-// Import content screens
-import 'home_screen.dart';
-import 'templates_screen.dart';
-import 'create_screen.dart';
-import 'shared_screen.dart';
-import 'profile_screen.dart';
+import 'home_content.dart';
+import 'other_contents.dart';
 
 /// Main navigation shell with persistent bottom nav bar
 /// Uses IndexedStack to keep pages in memory and prevent refreshing
