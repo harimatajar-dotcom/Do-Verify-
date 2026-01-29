@@ -4,6 +4,7 @@ import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../../domain/entities/user_entity.dart';
 import '../providers/theme_provider.dart';
+import '../providers/auth_provider.dart';
 import '../widgets/common/bottom_nav_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -17,7 +18,11 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   int _currentNavIndex = 4;
-  final UserEntity _user = UserEntity.defaultUser();
+
+  UserEntity get _user {
+    final authProvider = context.watch<AuthProvider>();
+    return authProvider.user ?? UserEntity.defaultUser();
+  }
 
   void _onNavTap(int index) {
     if (index == _currentNavIndex) return;
@@ -55,18 +60,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _logout() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Log Out'),
         content: const Text('Are you sure you want to log out?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.of(context).pushReplacementNamed('/login');
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+              await context.read<AuthProvider>().logout();
+              if (mounted) {
+                Navigator.of(context).pushReplacementNamed('/login');
+              }
             },
             child: const Text('Log Out', style: TextStyle(color: AppColors.error)),
           ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../../domain/entities/shared_checklist_entity.dart';
 import '../widgets/common/bottom_nav_bar.dart';
+import '../providers/checklist_provider.dart';
 
 class SharedScreen extends StatefulWidget {
   final bool showBottomNav;
