@@ -58,4 +58,35 @@ class UserEntity {
       tasksDone: 47,
     );
   }
+
+  /// Create from JSON (API response)
+  factory UserEntity.fromJson(Map<String, dynamic> json) {
+    final name = json['name'] ?? '';
+    final nameParts = name.split(' ');
+    final initials = nameParts.length >= 2
+        ? '${nameParts[0][0]}${nameParts[1][0]}'.toUpperCase()
+        : name.isNotEmpty ? name[0].toUpperCase() : 'U';
+
+    return UserEntity(
+      id: json['_id'] ?? json['id'] ?? '',
+      name: name,
+      email: json['email'] ?? '',
+      avatarUrl: json['avatar'],
+      initials: initials,
+      isPro: json['plan'] != null && json['plan'] != 'free',
+      checklistCount: json['stats']?['totalChecklists'] ?? 0,
+      completedCount: json['stats']?['completedChecklists'] ?? 0,
+      tasksDone: json['stats']?['totalCompletedTasks'] ?? 0,
+    );
+  }
+
+  /// Convert to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'avatar': avatarUrl,
+    };
+  }
 }
