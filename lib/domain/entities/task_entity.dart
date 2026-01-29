@@ -37,4 +37,22 @@ class TaskEntity {
 
   @override
   String toString() => 'TaskEntity(id: $id, title: $title, isCompleted: $isCompleted)';
+
+  /// Create from JSON
+  factory TaskEntity.fromJson(Map<String, dynamic> json) {
+    return TaskEntity(
+      id: json['_id'] ?? json['id'] ?? '',
+      title: json['text'] ?? json['title'] ?? '',
+      isCompleted: json['completed'] ?? json['isCompleted'] ?? false,
+    );
+  }
+
+  /// Convert to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'text': title,
+      'completed': isCompleted,
+    };
+  }
 }
