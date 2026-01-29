@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 import 'presentation/providers/template_provider.dart';
 import 'presentation/providers/theme_provider.dart';
+import 'presentation/providers/auth_provider.dart';
 import 'presentation/screens/login_screen.dart';
 import 'presentation/screens/register_screen.dart';
 import 'presentation/screens/home_screen.dart';
@@ -35,6 +36,11 @@ class CheckFlowApp extends StatelessWidget {
         // Theme Provider
         ChangeNotifierProvider(
           create: (_) => ThemeProvider(),
+        ),
+
+        // Auth Provider
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(),
         ),
 
         // Template Provider with dependencies

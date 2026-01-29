@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
+import '../providers/auth_provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -108,18 +110,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     setState(() => _isLoading = true);
 
-    await Future.delayed(const Duration(milliseconds: 1500));
+    // Call real API via AuthProvider
+    final authProvider = context.read<AuthProvider>();
+    final success = await authProvider.register(name, email, password);
 
     if (!mounted) return;
 
     setState(() => _isLoading = false);
-    _showToast('Account created successfully!');
 
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    if (!mounted) return;
-
-    Navigator.of(context).pushReplacementNamed('/home');
+    if (success) {
+      _showToast('Account created successfully!');
+      await Future.delayed(const Duration(milliseconds: 500));
+      if (!mounted) return;
+      Navigator.of(context).pushReplacementNamed('/main');
+    } else {
+      _showToast(authProvider.error ?? 'Registration failed. Please try again.');
+    }
   }
 
   void _handleSocialSignup(String provider) {

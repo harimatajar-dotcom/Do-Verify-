@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../../core/utils/responsive.dart';
+import '../providers/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -58,20 +60,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setState(() => _isLoading = true);
 
-    // Simulate API call
-    await Future.delayed(const Duration(milliseconds: 1500));
+    // Call real API via AuthProvider
+    final authProvider = context.read<AuthProvider>();
+    final success = await authProvider.login(email, password);
 
     if (!mounted) return;
 
     setState(() => _isLoading = false);
 
-    _showToast('Login successful!');
-
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    if (!mounted) return;
-
-    Navigator.of(context).pushReplacementNamed('/home');
+    if (success) {
+      _showToast('Login successful!');
+      await Future.delayed(const Duration(milliseconds: 500));
+      if (!mounted) return;
+      Navigator.of(context).pushReplacementNamed('/main');
+    } else {
+      _showToast(authProvider.error ?? 'Login failed. Please try again.');
+    }
   }
 
   void _handleSocialLogin(String provider) {
