@@ -7,7 +7,9 @@ import '../providers/theme_provider.dart';
 import '../widgets/common/bottom_nav_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final bool showBottomNav;
+  
+  const ProfileScreen({super.key, this.showBottomNav = true});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -191,10 +193,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _currentNavIndex,
-        onTap: _onNavTap,
-      ),
+      bottomNavigationBar: widget.showBottomNav
+          ? BottomNavBar(
+              currentIndex: _currentNavIndex,
+              onTap: _onNavTap,
+            )
+          : null,
     );
   }
 

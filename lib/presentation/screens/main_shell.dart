@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
 import '../widgets/common/bottom_nav_bar.dart';
-import 'home_content.dart';
-import 'other_contents.dart';
+import 'home_screen.dart';
+import 'templates_screen.dart';
+import 'create_screen.dart';
+import 'shared_screen.dart';
+import 'profile_screen.dart';
 
-/// Main navigation shell with persistent bottom nav bar
-/// Uses IndexedStack to keep pages in memory and prevent refreshing
+/// MainShell wraps all main screens with a single bottom navigation bar.
+/// Uses IndexedStack to preserve state when switching between tabs.
 class MainShell extends StatefulWidget {
   final int initialIndex;
   
@@ -17,6 +19,15 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   late int _currentIndex;
+  
+  // Keys to preserve state of each screen
+  final List<GlobalKey> _screenKeys = [
+    GlobalKey(),
+    GlobalKey(),
+    GlobalKey(),
+    GlobalKey(),
+    GlobalKey(),
+  ];
 
   @override
   void initState() {
@@ -31,19 +42,16 @@ class _MainShellState extends State<MainShell> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
-      resizeToAvoidBottomInset: false, // Prevents bottom nav from moving with keyboard
+      resizeToAvoidBottomInset: false,
       body: IndexedStack(
         index: _currentIndex,
-        children: const [
-          HomeContent(),
-          TemplatesContent(),
-          CreateContent(),
-          SharedContent(),
-          ProfileContent(),
+        children: [
+          HomeScreen(key: _screenKeys[0], showBottomNav: false),
+          TemplatesScreen(key: _screenKeys[1], showBottomNav: false),
+          CreateScreen(key: _screenKeys[2], showBottomNav: false),
+          SharedScreen(key: _screenKeys[3], showBottomNav: false),
+          ProfileScreen(key: _screenKeys[4], showBottomNav: false),
         ],
       ),
       bottomNavigationBar: BottomNavBar(

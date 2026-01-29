@@ -5,7 +5,9 @@ import '../../domain/entities/shared_checklist_entity.dart';
 import '../widgets/common/bottom_nav_bar.dart';
 
 class SharedScreen extends StatefulWidget {
-  const SharedScreen({super.key});
+  final bool showBottomNav;
+  
+  const SharedScreen({super.key, this.showBottomNav = true});
 
   @override
   State<SharedScreen> createState() => _SharedScreenState();
@@ -99,10 +101,12 @@ class _SharedScreenState extends State<SharedScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _currentNavIndex,
-        onTap: _onNavTap,
-      ),
+      bottomNavigationBar: widget.showBottomNav
+          ? BottomNavBar(
+              currentIndex: _currentNavIndex,
+              onTap: _onNavTap,
+            )
+          : null,
     );
   }
 

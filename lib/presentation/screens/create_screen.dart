@@ -4,7 +4,9 @@ import '../../core/constants/app_dimensions.dart';
 import '../widgets/common/bottom_nav_bar.dart';
 
 class CreateScreen extends StatefulWidget {
-  const CreateScreen({super.key});
+  final bool showBottomNav;
+  
+  const CreateScreen({super.key, this.showBottomNav = true});
 
   @override
   State<CreateScreen> createState() => _CreateScreenState();
@@ -210,14 +212,16 @@ class _CreateScreenState extends State<CreateScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: 2,
-        onTap: (index) {
-          if (index != 2) {
-            Navigator.of(context).pushReplacementNamed(_getRouteForIndex(index));
-          }
-        },
-      ),
+      bottomNavigationBar: widget.showBottomNav
+          ? BottomNavBar(
+              currentIndex: 2,
+              onTap: (index) {
+                if (index != 2) {
+                  Navigator.of(context).pushReplacementNamed(_getRouteForIndex(index));
+                }
+              },
+            )
+          : null,
     );
   }
 
